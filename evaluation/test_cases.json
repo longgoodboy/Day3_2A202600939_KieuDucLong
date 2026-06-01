@@ -1,0 +1,203 @@
+[
+  {
+    "id": "B01",
+    "category": "simple_qa",
+    "query": "What kind of assistant are you?",
+    "expected": {"keywords": ["assistant"]},
+    "validator": "contains_keywords",
+    "required_tools": [],
+    "forbidden_tools": ["get_product_details", "check_stock", "get_discount", "calc_shipping", "calculate_order_total"]
+  },
+  {
+    "id": "B02",
+    "category": "product_details",
+    "query": "What is the price and weight of iPhone 15?",
+    "expected": {"keywords": ["iPhone 15", "20,000,000", "0.35"]},
+    "validator": "contains_keywords",
+    "required_tools": ["get_product_details"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B03",
+    "category": "stock",
+    "query": "Do you have 2 iPhone 15 devices in stock?",
+    "expected": {"keywords": ["12", "stock"]},
+    "validator": "contains_keywords",
+    "required_tools": ["check_stock"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B04",
+    "category": "stock",
+    "query": "Can I buy 100 iPhone 15 devices?",
+    "expected": {"keywords": ["12", "100", "stock"]},
+    "validator": "error_handling",
+    "required_tools": ["check_stock"],
+    "forbidden_tools": ["calculate_order_total"]
+  },
+  {
+    "id": "B05",
+    "category": "coupon",
+    "query": "Is coupon WINNER active and what discount does it give?",
+    "expected": {"keywords": ["WINNER", "active", "10"]},
+    "validator": "contains_keywords",
+    "required_tools": ["get_discount"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B06",
+    "category": "coupon",
+    "query": "Can I use coupon OLD2025?",
+    "expected": {"keywords": ["OLD2025", "expired"]},
+    "validator": "error_handling",
+    "required_tools": ["get_discount"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B07",
+    "category": "coupon",
+    "query": "Can I use coupon FAKECODE?",
+    "expected": {"keywords": ["FAKECODE", "unknown"]},
+    "validator": "error_handling",
+    "required_tools": ["get_discount"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B08",
+    "category": "shipping",
+    "query": "How much is shipping 0.7 kg to Hanoi?",
+    "expected": {"keywords": ["Hanoi", "37,000"]},
+    "validator": "contains_keywords",
+    "required_tools": ["calc_shipping"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B09",
+    "category": "shipping",
+    "query": "How much is shipping 0.7 kg to Ho Chi Minh City?",
+    "expected": {"keywords": ["Ho Chi Minh", "43,400"]},
+    "validator": "contains_keywords",
+    "required_tools": ["calc_shipping"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B10",
+    "category": "shipping",
+    "query": "How much is shipping 0.7 kg to Atlantis?",
+    "expected": {"keywords": ["Atlantis", "unsupported"]},
+    "validator": "error_handling",
+    "required_tools": ["calc_shipping"],
+    "forbidden_tools": ["calculate_order_total"]
+  },
+  {
+    "id": "B11",
+    "category": "full_order",
+    "query": "I want to buy 2 iPhone 15 devices using WINNER and ship to Hanoi. What is the final total?",
+    "expected": {
+      "product_name": "iPhone 15",
+      "quantity": 2,
+      "subtotal_vnd": 40000000,
+      "discount_percent": 10,
+      "shipping_fee_vnd": 37000,
+      "final_total_vnd": 36037000
+    },
+    "validator": "order_total",
+    "required_tools": ["get_discount", "calc_shipping", "calculate_order_total"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B12",
+    "category": "full_order",
+    "query": "I want to buy 2 iPhone 15 devices without a coupon and ship to Hanoi. What is the final total?",
+    "expected": {
+      "product_name": "iPhone 15",
+      "quantity": 2,
+      "subtotal_vnd": 40000000,
+      "discount_percent": 0,
+      "shipping_fee_vnd": 37000,
+      "final_total_vnd": 40037000
+    },
+    "validator": "order_total",
+    "required_tools": ["get_product_details", "calc_shipping", "calculate_order_total"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B13",
+    "category": "invalid_quantity",
+    "query": "Can I buy 0 iPhone 15 devices?",
+    "expected": {"keywords": ["quantity", "positive", "0"]},
+    "validator": "error_handling",
+    "required_tools": ["check_stock"],
+    "forbidden_tools": ["calculate_order_total"]
+  },
+  {
+    "id": "B14",
+    "category": "invalid_weight",
+    "query": "How much is shipping -1 kg to Hanoi?",
+    "expected": {"keywords": ["weight", "positive"]},
+    "validator": "error_handling",
+    "required_tools": ["calc_shipping"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B15",
+    "category": "search",
+    "query": "Search products for charger.",
+    "expected": {"keywords": ["USB-C Charger 65W", "550,000"]},
+    "validator": "contains_keywords",
+    "required_tools": ["search_products"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B16",
+    "category": "empty_search",
+    "query": "Search products for quantum banana.",
+    "expected": {"keywords": ["0"]},
+    "validator": "contains_keywords",
+    "required_tools": ["search_products"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B17",
+    "category": "product_details",
+    "query": "What is the price of Laptop Air 13?",
+    "expected": {"keywords": ["Laptop Air 13", "24,000,000"]},
+    "validator": "contains_keywords",
+    "required_tools": ["get_product_details"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B18",
+    "category": "full_order",
+    "query": "I want to buy 1 Wireless Headphones Pro with FREESHIP and ship to Da Nang. What is the final total?",
+    "expected": {
+      "product_name": "Wireless Headphones Pro",
+      "quantity": 1,
+      "subtotal_vnd": 1800000,
+      "discount_percent": 5,
+      "shipping_fee_vnd": 36950,
+      "final_total_vnd": 1746950
+    },
+    "validator": "order_total",
+    "required_tools": ["get_product_details", "get_discount", "calc_shipping", "calculate_order_total"],
+    "forbidden_tools": []
+  },
+  {
+    "id": "B19",
+    "category": "stock",
+    "query": "Do you have 6 Laptop Air 13 units?",
+    "expected": {"keywords": ["5", "6", "stock"]},
+    "validator": "error_handling",
+    "required_tools": ["check_stock"],
+    "forbidden_tools": ["calculate_order_total"]
+  },
+  {
+    "id": "B20",
+    "category": "shipping",
+    "query": "How much is shipping 1.25 kg to Da Nang?",
+    "expected": {"keywords": ["Da Nang", "45,750"]},
+    "validator": "contains_keywords",
+    "required_tools": ["calc_shipping"],
+    "forbidden_tools": []
+  }
+]

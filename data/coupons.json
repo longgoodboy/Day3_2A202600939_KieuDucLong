@@ -1,0 +1,17 @@
+[
+  {
+    "code": "WINNER",
+    "discount_percent": 10,
+    "status": "active"
+  },
+  {
+    "code": "OLD2025",
+    "discount_percent": 20,
+    "status": "expired"
+  },
+  {
+    "code": "FREESHIP",
+    "discount_percent": 5,
+    "status": "active"
+  }
+]

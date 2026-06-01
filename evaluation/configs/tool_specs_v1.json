@@ -1,0 +1,11 @@
+{
+  "description": "Vague tool descriptions for ablation baseline.",
+  "tools": [
+    {"name": "search_products", "description": "Search products."},
+    {"name": "get_product_details", "description": "Get product info."},
+    {"name": "check_stock", "description": "Check stock."},
+    {"name": "get_discount", "description": "Check coupon."},
+    {"name": "calc_shipping", "description": "Calculate shipping."},
+    {"name": "calculate_order_total", "description": "Calculate total."}
+  ]
+}

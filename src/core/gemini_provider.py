@@ -5,7 +5,9 @@ from typing import Dict, Any, Optional, Generator
 from src.core.llm_provider import LLMProvider
 
 class GeminiProvider(LLMProvider):
-    def __init__(self, model_name: str = "gemini-1.5-flash", api_key: Optional[str] = None):
+    provider_name = "gemini"
+
+    def __init__(self, model_name: str = "gemini-2.5-flash", api_key: Optional[str] = None):
         super().__init__(model_name, api_key)
         genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel(model_name)
@@ -26,17 +28,19 @@ class GeminiProvider(LLMProvider):
 
         # Gemini usage data is in response.usage_metadata
         content = response.text
+        usage_metadata = getattr(response, "usage_metadata", None)
         usage = {
-            "prompt_tokens": response.usage_metadata.prompt_token_count,
-            "completion_tokens": response.usage_metadata.candidates_token_count,
-            "total_tokens": response.usage_metadata.total_token_count
+            "prompt_tokens": getattr(usage_metadata, "prompt_token_count", 0),
+            "completion_tokens": getattr(usage_metadata, "candidates_token_count", 0),
+            "total_tokens": getattr(usage_metadata, "total_token_count", 0)
         }
 
         return {
             "content": content,
             "usage": usage,
             "latency_ms": latency_ms,
-            "provider": "google"
+            "provider": "gemini",
+            "model": self.model_name,
         }
 
     def stream(self, prompt: str, system_prompt: Optional[str] = None) -> Generator[str, None, None]:

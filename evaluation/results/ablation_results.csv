@@ -1,0 +1,5 @@
+experiment,config,cases,status,notes
+tool_description,tool_specs_v1,0,pending,"Run after main MiMo benchmark is stable."
+tool_description,tool_specs_v2,0,pending,"Run after main MiMo benchmark is stable."
+prompt_format,prompt_v1,0,pending,"Run after main MiMo benchmark is stable."
+prompt_format,prompt_v2,0,pending,"Run after main MiMo benchmark is stable."
