@@ -1,9 +1,64 @@
-import json
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+PRODUCTS = [
+    {
+        "id": "P001",
+        "name": "iPhone 15",
+        "category": "phone",
+        "aliases": ["iphone", "iphone 15", "iphones"],
+        "price_vnd": 20000000,
+        "stock": 12,
+        "weight_kg": 0.35,
+    },
+    {
+        "id": "P002",
+        "name": "Samsung Galaxy S24",
+        "category": "phone",
+        "aliases": ["galaxy s24", "samsung"],
+        "price_vnd": 17990000,
+        "stock": 5,
+        "weight_kg": 0.2,
+    },
+    {
+        "id": "P003",
+        "name": "MacBook Air M3",
+        "category": "laptop",
+        "aliases": ["macbook", "macbook air"],
+        "price_vnd": 27990000,
+        "stock": 3,
+        "weight_kg": 1.24,
+    },
+    {
+        "id": "P004",
+        "name": "Wireless Headphones Pro",
+        "category": "headphones",
+        "aliases": ["headphones", "wireless headphones"],
+        "price_vnd": 1500000,
+        "stock": 20,
+        "weight_kg": 0.25,
+    },
+]
+
+COUPONS = [
+    {"code": "WINNER", "status": "active", "discount_percent": 10},
+    {"code": "OLD2025", "status": "expired", "discount_percent": 20},
+]
+
+SHIPPING_RATES = [
+    {
+        "destination": "Hanoi",
+        "aliases": ["ha noi", "hà nội", "hanoi"],
+        "base_fee_vnd": 30000,
+        "fee_per_kg_vnd": 10000,
+    },
+    {
+        "destination": "Ho Chi Minh City",
+        "aliases": ["hcm", "hcmc", "ho chi minh", "sai gon", "saigon"],
+        "base_fee_vnd": 35000,
+        "fee_per_kg_vnd": 12000,
+    },
+]
 
 
 def search_products(
@@ -19,7 +74,7 @@ def search_products(
     normalized_category = _normalize(category) if category else None
     matches = []
 
-    for product in _load_json("products.json"):
+    for product in PRODUCTS:
         searchable = " ".join(
             [product["name"], product["category"], *product.get("aliases", [])]
         )
@@ -71,7 +126,7 @@ def get_discount(coupon_code: str) -> Dict[str, Any]:
         return _error("INVALID_COUPON", "coupon_code must be a non-empty string.")
 
     normalized_code = str(coupon_code).strip().upper()
-    for coupon in _load_json("coupons.json"):
+    for coupon in COUPONS:
         if coupon["code"].upper() == normalized_code:
             is_active = coupon["status"] == "active"
             return _success(
@@ -155,16 +210,11 @@ def calculate_order_total(
     )
 
 
-def _load_json(filename: str) -> list[dict[str, Any]]:
-    with (DATA_DIR / filename).open("r", encoding="utf-8") as file:
-        return json.load(file)
-
-
 def _find_product(item_name: str) -> Optional[dict[str, Any]]:
     if not item_name or not str(item_name).strip():
         return None
     needle = _normalize(item_name)
-    for product in _load_json("products.json"):
+    for product in PRODUCTS:
         names = [product["name"], *product.get("aliases", [])]
         if any(needle == _normalize(name) or needle in _normalize(name) for name in names):
             return product
@@ -173,7 +223,7 @@ def _find_product(item_name: str) -> Optional[dict[str, Any]]:
 
 def _find_shipping_rate(destination: str) -> Optional[dict[str, Any]]:
     needle = _normalize(destination)
-    for rate in _load_json("shipping_rates.json"):
+    for rate in SHIPPING_RATES:
         names = [rate["destination"], *rate.get("aliases", [])]
         if any(needle == _normalize(name) or needle in _normalize(name) for name in names):
             return rate
